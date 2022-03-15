@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 const Wrap = styled.div`
   width: 500px;
-  margin: 30px auto;
+  margin: auto;
+  height: 90vh;
 `;
 
 interface ContainerProps {

@@ -1,30 +1,59 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Container, GameBoard, Header } from "./components";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./styles/theme";
+import { generateNewTiles, handleArrowClick } from "./utils";
+import { TileType } from "./types/type";
 
-function App() {
+const App = () => {
   const [hasWon, setHasWon] = useState(false);
   const [hasLost, setHasLost] = useState(false);
 
-  const logKey = (event: KeyboardEvent) => {
-    console.log(event.code);
-  };
+  const [tiles, setTiles] = useState<TileType[][]>([]);
 
   useEffect(() => {
-    window.addEventListener("keydown", logKey);
+    setTiles(generateNewTiles());
+  }, []);
+
+  const checkKeyboardPress = useCallback(
+    (event: KeyboardEvent) => {
+      if (
+        tiles.length > 0 &&
+        (event.code === "ArrowRight" ||
+          event.code === "ArrowLeft" ||
+          event.code === "ArrowUp" ||
+          event.code === "ArrowDown")
+      ) {
+        const updatedTiles = handleArrowClick(event.code, tiles);
+        setTiles(updatedTiles);
+        console.log("new Tiles: ", tiles);
+      }
+    },
+    [tiles]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", checkKeyboardPress);
 
     return () => {
-      window.removeEventListener("keydown", logKey);
+      window.removeEventListener("keydown", checkKeyboardPress);
     };
-  }, [hasLost]);
+  }, [hasWon, hasLost, checkKeyboardPress]);
 
   return (
-    <div className="App">
-      <Container>
-        <Header />
-        <GameBoard />
-      </Container>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div
+        className="App"
+        // onKeyDown={(e) => checkKeyboardPress(e)}
+        // tabIndex={0}
+      >
+        <Container>
+          <Header />
+          <GameBoard tiles={tiles} />
+        </Container>
+      </div>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

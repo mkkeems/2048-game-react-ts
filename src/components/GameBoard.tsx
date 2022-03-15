@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Tile from "./Tile";
-import { generateNewTiles } from "../utils";
+// import { generateNewTiles, handleArrowClick } from "../utils";
 import { TileType } from "../types/type";
 
 const Board = styled.div`
@@ -17,23 +17,39 @@ const Board = styled.div`
   grid-column-gap: 15px;
 `;
 
-// interface GameBoardProps {
-//   children: React.ReactNode;
-// }
+interface GameBoardProps {
+  tiles: TileType[][];
+  // randomText: string;
+  // setTiles: React.Dispatch<SetStateAction<TileType[][]>>;
+}
 
-const GameBoard = () => {
-  const [tiles, setTiles] = useState<TileType[][]>(generateNewTiles());
+const GameBoard = ({ tiles }: GameBoardProps) => {
+  // const renderTiles = (tiles: TileType[][]): React.ReactNode => {
+  //   return tiles.map((row, rowIndex) =>
+  //     row.map((tile, colIndex) => {
+  //       return (
+  //         <Tile
+  //           value={tile.value}
+  //           key={`row-${rowIndex}-col-${colIndex}`}
+  //           row={rowIndex}
+  //           col={colIndex}
+  //         />
+  //       );
+  //     })
+  //   );
+  // };
 
-  const renderTiles = (): React.ReactNode => {
-    console.log(tiles);
-    return tiles.map((row, rowIndex) =>
-      row.map((tile, colIndex) => (
-        <Tile value={tile.value} key={`row-${rowIndex}-col-${colIndex}`} />
-      ))
-    );
-  };
-
-  return <Board>{renderTiles()}</Board>;
+  return (
+    <>
+      <Board>
+        {tiles.map((row, rowIndex) =>
+          row.map((tile, colIndex) => (
+            <Tile value={tile.value} key={`row-${rowIndex}-col-${colIndex}`} />
+          ))
+        )}
+      </Board>
+    </>
+  );
 };
 
 export default GameBoard;
