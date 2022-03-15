@@ -42,6 +42,7 @@ export const handleArrowClick = (
   tiles: TileType[][]
 ): TileType[][] => {
   let updatedTiles: TileType[][] = [];
+  let checkCanMerge: boolean[] = [];
 
   const removeZeroArr = (arr: TileType[]): TileType[] => {
     return arr.reduce((newArr: TileType[], curr: TileType) => {
@@ -52,18 +53,28 @@ export const handleArrowClick = (
     }, []);
   };
 
+  // TODO: check if tiles in clicked direction can merges
+  // currently checking if there are any changes after merging moved tiles from original row
+  // but better way would be to skip the merge completely if array is 0 0 on side depending on direction clicked
+  const checkArraysMatch = (arr1: TileType[], arr2: TileType[]) => {
+    for (let i = 0; i < 4; i++) {
+      console.log(arr1[i].value, arr2[i].value);
+      if (arr1[i].value !== arr2[i].value) {
+        checkCanMerge.push(true);
+      } else {
+        checkCanMerge.push(false);
+      }
+    }
+  };
+
   if (eventCode === "ArrowRight") {
     updatedTiles = tiles.map((row) => {
       const noZerosArr = removeZeroArr(row);
       let mergedArray: TileType[] = [];
 
-      console.log("noZerosArr", noZerosArr);
-
       if (noZerosArr.length > 1) {
         mergedArray = noZerosArr.reduceRight(
           (newArr: TileType[], curr: TileType, index, array) => {
-            console.log(curr, index, noZerosArr[index - 1], array);
-
             if (
               noZerosArr[index - 1] &&
               curr.value === noZerosArr[index - 1].value
@@ -94,13 +105,15 @@ export const handleArrowClick = (
         });
       }
 
-      console.log("mergedArray", mergedArray);
+      checkArraysMatch(mergedArray, row);
+
       return mergedArray;
     });
   }
 
-  console.log("update tiles after merge");
-  updatedTiles = [...addNewTile(updatedTiles)];
+  if (checkCanMerge.some((val) => val)) {
+    updatedTiles = [...addNewTile(updatedTiles)];
+  }
 
   return updatedTiles;
 };
