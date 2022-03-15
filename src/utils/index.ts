@@ -11,7 +11,7 @@ export const addNewTile = (tiles: TileType[][]) => {
     let row = getRandomRow();
     let col = getRandomCol();
     if (updatedTiles[row][col].value === 0) {
-      console.log("row:", row, "col:", col);
+      console.log("adding new tile on row:", row, "col:", col);
       updatedTiles[row][col].value = 2;
       addedNewTile = true;
     }
@@ -58,7 +58,6 @@ export const handleArrowClick = (
   // but better way would be to skip the merge completely if array is 0 0 on side depending on direction clicked
   const checkArraysMatch = (arr1: TileType[], arr2: TileType[]) => {
     for (let i = 0; i < 4; i++) {
-      console.log(arr1[i].value, arr2[i].value);
       if (arr1[i].value !== arr2[i].value) {
         checkCanMerge.push(true);
       } else {
@@ -101,6 +100,49 @@ export const handleArrowClick = (
 
       while (mergedArray.length < 4) {
         mergedArray.unshift({
+          value: 0,
+        });
+      }
+
+      checkArraysMatch(mergedArray, row);
+
+      return mergedArray;
+    });
+  }
+
+  if (eventCode === "ArrowLeft") {
+    updatedTiles = tiles.map((row) => {
+      const noZerosArr = removeZeroArr(row);
+      let mergedArray: TileType[] = [];
+
+      if (noZerosArr.length > 1) {
+        mergedArray = noZerosArr.reduce(
+          (newArr: TileType[], curr: TileType, index, array) => {
+            if (
+              noZerosArr[index + 1] &&
+              curr.value === noZerosArr[index + 1].value
+            ) {
+              array.splice(index);
+              const doubleCurr: TileType = { value: curr.value * 2 };
+              newArr.push(doubleCurr);
+            } else {
+              newArr.push(curr);
+            }
+            return newArr;
+          },
+          []
+        );
+      }
+
+      if (noZerosArr.length === 0) {
+        mergedArray.push({ value: 0 });
+      }
+      if (noZerosArr.length === 1) {
+        mergedArray = [...noZerosArr];
+      }
+
+      while (mergedArray.length < 4) {
+        mergedArray.push({
           value: 0,
         });
       }
