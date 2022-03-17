@@ -20,6 +20,7 @@ const App = () => {
   const [tiles, setTiles] = useState<TileType[][]>([]);
 
   useEffect(() => {
+    setNewGame(true);
     setTiles(generateNewTiles());
     setScore(0);
   }, []);
@@ -33,16 +34,35 @@ const App = () => {
           event.code === "ArrowUp" ||
           event.code === "ArrowDown")
       ) {
-        const { updatedTiles, addScore } = handleArrowClick(event.code, tiles);
+        const { updatedTiles, addScore, gameOver, winGame, loseGame } =
+          handleArrowClick(event.code, tiles);
         setScore(score + addScore);
         setTiles(updatedTiles);
+
+        if (gameOver && winGame) {
+          console.log("gameOVER?", gameOver);
+          setHasWon(true);
+          setNewGame(false);
+        }
+
+        if (gameOver && loseGame) {
+          console.log("gameOVER?", gameOver);
+          setHasLost(true);
+          setNewGame(false);
+        }
       }
     },
     [tiles, score]
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", checkKeyboardPress);
+    if (newGame) {
+      window.addEventListener("keydown", checkKeyboardPress);
+    }
+
+    if (!newGame) {
+      window.removeEventListener("keydown", checkKeyboardPress);
+    }
 
     return () => {
       window.removeEventListener("keydown", checkKeyboardPress);
@@ -65,7 +85,12 @@ const App = () => {
               />
             </div>
           </Header>
-          <GameBoard tiles={tiles} />
+          <GameBoard
+            tiles={tiles}
+            hasWon={hasWon}
+            hasLost={hasLost}
+            newGame={newGame}
+          />
         </Container>
       </div>
     </ThemeProvider>

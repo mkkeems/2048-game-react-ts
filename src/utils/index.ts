@@ -36,10 +36,49 @@ export const generateNewTiles = () => {
   return tiles;
 };
 
+const checkLoss = (array: TileType[][]): boolean => {
+  const falseCheckArr: boolean[] = [];
+  for (let i = 0; i < array.length; i++) {
+    const row = array[i];
+    const col = [];
+    array.forEach((arr) => col.push(arr[i]));
+
+    row.forEach((item, index) => {
+      if (row[index + 1] && item.value === row[index + 1].value) {
+        falseCheckArr.push(false);
+        console.log(item.value);
+      } else {
+        falseCheckArr.push(true);
+      }
+    });
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    const col: TileType[] = [];
+    array.forEach((arr) => col.push(arr[i]));
+
+    col.forEach((item, index) => {
+      if (col[index + 1] && item.value === col[index + 1].value) {
+        falseCheckArr.push(false);
+        console.log(item.value);
+      } else {
+        falseCheckArr.push(true);
+      }
+    });
+  }
+  return falseCheckArr.some((val) => val);
+};
+
 export const handleArrowClick = (
   eventCode: KeyboardEvent["code"],
   tiles: TileType[][]
-): { updatedTiles: TileType[][]; addScore: number } => {
+): {
+  updatedTiles: TileType[][];
+  addScore: number;
+  gameOver: boolean;
+  winGame: boolean;
+  loseGame: boolean;
+} => {
   let updatedTiles: TileType[][] = [];
   let checkCanMerge: boolean[] = [];
   let addScore = 0;
@@ -266,9 +305,26 @@ export const handleArrowClick = (
     updatedTiles = [...mergedFlipped];
   }
 
+  let winGame = false;
+  let loseGame = false;
+  let gameOver = false;
+
   if (checkCanMerge.length > 0 && checkCanMerge.some((val) => val)) {
     updatedTiles = [...addNewTile(updatedTiles)];
   }
 
-  return { updatedTiles, addScore };
+  if (
+    checkLoss(updatedTiles) &&
+    updatedTiles.every((row) => row.every((item) => item.value !== 0))
+  ) {
+    gameOver = true;
+    loseGame = true;
+  }
+
+  if (updatedTiles.some((item) => item.some((val) => val.value === 2048))) {
+    gameOver = true;
+    winGame = true;
+  }
+
+  return { updatedTiles, addScore, gameOver, winGame, loseGame };
 };
