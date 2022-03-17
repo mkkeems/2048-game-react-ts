@@ -11,7 +11,6 @@ export const addNewTile = (tiles: TileType[][]) => {
     let row = getRandomRow();
     let col = getRandomCol();
     if (updatedTiles[row][col].value === 0) {
-      console.log("adding new tile on row:", row, "col:", col);
       updatedTiles[row][col].value = 2;
       addedNewTile = true;
     }
@@ -147,7 +146,64 @@ export const handleArrowClick = (
     });
   }
 
-  if (checkCanMerge.some((val) => val)) {
+  if (eventCode === "ArrowDown") {
+    const mergedPreFlipped = [];
+
+    for (let i = 0; i < tiles.length; i++) {
+      const col: TileType[] = [];
+      tiles.forEach((row) => col.push(row[i]));
+      const noZerosArr = removeZeroArr(col);
+
+      let mergedArray: TileType[] = [];
+
+      if (noZerosArr.length === 0) {
+        mergedArray.unshift({ value: 0 });
+      }
+      if (noZerosArr.length === 1) {
+        mergedArray = [...noZerosArr];
+      }
+      if (noZerosArr.length > 1) {
+        mergedArray = noZerosArr.reduceRight(
+          (newArr: TileType[], curr: TileType, index, array) => {
+            if (
+              noZerosArr[index - 1] &&
+              curr.value === noZerosArr[index - 1].value
+            ) {
+              array.splice(index - 1);
+              const doubleCurr: TileType = { value: curr.value * 2 };
+              newArr.unshift(doubleCurr);
+            } else {
+              newArr.unshift(curr);
+            }
+
+            return newArr;
+          },
+          []
+        );
+      }
+
+      while (mergedArray.length < 4) {
+        mergedArray.unshift({
+          value: 0,
+        });
+      }
+
+      checkArraysMatch(mergedArray, col);
+      mergedPreFlipped.push(mergedArray);
+    }
+    let mergedFlipped: TileType[][] = [[], [], [], []];
+
+    for (let i = 0; i < 4; i++) {
+      mergedPreFlipped.forEach((row: TileType[]) => {
+        mergedFlipped[i].push(row[i]);
+      });
+    }
+
+    mergedFlipped.forEach((row) => console.log(row));
+    updatedTiles = [...mergedFlipped];
+  }
+
+  if (checkCanMerge.length > 0 && checkCanMerge.some((val) => val)) {
     updatedTiles = [...addNewTile(updatedTiles)];
   }
 
