@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
-  background: #bbada0;
+  background: ${(props) => props.theme.tile.board};
   padding: 10px 25px;
   font-size: 25px;
   font-weight: bold;

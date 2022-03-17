@@ -8,9 +8,15 @@ const theme: DefaultTheme = {
     fontWeight: "bold",
     height: "100vh",
   },
+  button: {
+    dark: "#8f7a66",
+    light: "#bbada0",
+  },
+  font: {
+    dark: "#776E65",
+    light: "#f9f6f2",
+  },
   tile: {
-    smallNum: "#776E65",
-    bigNum: "#f9f6f2",
     board: "#bbada0",
     empty: "rgba(238, 228, 218, 0.35)",
     two: "#EEE4DA",

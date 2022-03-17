@@ -4,15 +4,20 @@ import { TileType } from "../types/type";
 import { generateNewTiles } from "../utils";
 
 const Button = styled.div`
-  background: #8f7a66;
+  background: ${(props) => props.theme.button.dark};
   border-radius: 3px;
   padding: 0 20px;
-  color: #f9f6f2;
+  color: ${(props) => props.theme.font.light};
   line-height: 42px;
   cursor: pointer;
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  font-weight: bold;
+
+  &:hover {
+    background: ${(props) => props.theme.button.light};
+  }
 `;
 
 interface NewGameButtonProps {
@@ -32,7 +37,7 @@ const NewGameButton = ({
     setTiles(generateNewTiles());
   };
 
-  return <Button onClick={handleClick}>New Game Button</Button>;
+  return <Button onClick={handleClick}>New Game</Button>;
 };
 
 export default NewGameButton;

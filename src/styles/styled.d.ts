@@ -9,9 +9,15 @@ declare module "styled-components" {
       fontWeight: string;
       height: string;
     };
+    button: {
+      dark: string;
+      light: string;
+    };
+    font: {
+      dark: string;
+      light: string;
+    };
     tile: {
-      smallNum: string;
-      bigNum: string;
       board: string;
       empty: string;
       two: string;

@@ -1,13 +1,12 @@
-import React from "react";
+// import React from "react";
 import styled from "styled-components";
 import Tile from "./Tile";
-// import { generateNewTiles, handleArrowClick } from "../utils";
 import { TileType } from "../types/type";
 
 const Board = styled.div`
   width: 500px;
   height: 500px;
-  background-color: #bbada0;
+  background-color: ${(props) => props.theme.tile.board};
   border-radius: 6px;
   padding: 15px;
   display: grid;
@@ -19,26 +18,9 @@ const Board = styled.div`
 
 interface GameBoardProps {
   tiles: TileType[][];
-  // randomText: string;
-  // setTiles: React.Dispatch<SetStateAction<TileType[][]>>;
 }
 
 const GameBoard = ({ tiles }: GameBoardProps) => {
-  // const renderTiles = (tiles: TileType[][]): React.ReactNode => {
-  //   return tiles.map((row, rowIndex) =>
-  //     row.map((tile, colIndex) => {
-  //       return (
-  //         <Tile
-  //           value={tile.value}
-  //           key={`row-${rowIndex}-col-${colIndex}`}
-  //           row={rowIndex}
-  //           col={colIndex}
-  //         />
-  //       );
-  //     })
-  //   );
-  // };
-
   return (
     <>
       <Board>

@@ -4,7 +4,6 @@ import styled from "styled-components";
 const Wrap = styled.div`
   width: 500px;
   margin: auto;
-  /* height: 100vh; */
 `;
 
 interface ContainerProps {

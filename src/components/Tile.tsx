@@ -9,8 +9,7 @@ const Wrap = styled.div<TileType>`
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  color: ${(props) =>
-    props.value > 4 ? theme.tile.bigNum : theme.tile.smallNum};
+  color: ${(props) => (props.value > 4 ? theme.font.light : theme.font.dark)};
   font-size: ${(props) => (props.value > 100 ? "45px" : "55px")};
   background-color: ${(props) => {
     switch (props.value) {
