@@ -8,15 +8,23 @@ declare module "styled-components" {
       fontFamily: string;
       fontWeight: string;
       height: string;
-
-      colors: {
-        board: string;
-        empty: string;
-        two: string;
-        four: string;
-        eight: string;
-        sixteen: string;
-      };
+    };
+    tile: {
+      smallNum: string;
+      bigNum: string;
+      board: string;
+      empty: string;
+      two: string;
+      four: string;
+      eight: string;
+      sixteen: string;
+      thirtytwo: string;
+      sixtyfour: string;
+      oneTwoEight: string;
+      twoFiveSix: string;
+      fiveOneTwo: string;
+      oneOhTwoFour: string;
+      twoOhFourEight: string;
     };
   }
 }

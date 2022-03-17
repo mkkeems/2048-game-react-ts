@@ -39,9 +39,10 @@ export const generateNewTiles = () => {
 export const handleArrowClick = (
   eventCode: KeyboardEvent["code"],
   tiles: TileType[][]
-): TileType[][] => {
+): { updatedTiles: TileType[][]; addScore: number } => {
   let updatedTiles: TileType[][] = [];
   let checkCanMerge: boolean[] = [];
+  let addScore = 0;
 
   const removeZeroArr = (arr: TileType[]): TileType[] => {
     return arr.reduce((newArr: TileType[], curr: TileType) => {
@@ -84,6 +85,7 @@ export const handleArrowClick = (
               curr.value === noZerosArr[index - 1].value
             ) {
               array.splice(index - 1);
+              addScore += curr.value * 2;
               const doubleCurr: TileType = { value: curr.value * 2 };
               newArr.unshift(doubleCurr);
             } else {
@@ -124,6 +126,7 @@ export const handleArrowClick = (
           (newArr: TileType[], curr: TileType, index, array) => {
             if (array[index + 1] && curr.value === array[index + 1].value) {
               array.splice(index + 1, 1);
+              addScore += curr.value * 2;
               const doubleCurr: TileType = { value: curr.value * 2 };
               newArr.push(doubleCurr);
             } else {
@@ -150,6 +153,7 @@ export const handleArrowClick = (
     const mergedPreFlipped = [];
 
     for (let i = 0; i < tiles.length; i++) {
+      let score = 0;
       const col: TileType[] = [];
       tiles.forEach((row) => col.push(row[i]));
       const noZerosArr = removeZeroArr(col);
@@ -170,6 +174,7 @@ export const handleArrowClick = (
               curr.value === noZerosArr[index - 1].value
             ) {
               array.splice(index - 1);
+              score = curr.value * 2;
               const doubleCurr: TileType = { value: curr.value * 2 };
               newArr.unshift(doubleCurr);
             } else {
@@ -190,6 +195,7 @@ export const handleArrowClick = (
 
       checkArraysMatch(mergedArray, col);
       mergedPreFlipped.push(mergedArray);
+      addScore += score;
     }
     let mergedFlipped: TileType[][] = [[], [], [], []];
 
@@ -199,7 +205,64 @@ export const handleArrowClick = (
       });
     }
 
-    mergedFlipped.forEach((row) => console.log(row));
+    updatedTiles = [...mergedFlipped];
+  }
+
+  if (eventCode === "ArrowUp") {
+    const mergedPreFlipped = [];
+
+    for (let i = 0; i < tiles.length; i++) {
+      let score = 0;
+      const col: TileType[] = [];
+      tiles.forEach((row) => col.push(row[i]));
+      const noZerosArr = removeZeroArr(col);
+
+      let mergedArray: TileType[] = [];
+
+      if (noZerosArr.length === 0) {
+        mergedArray.push({ value: 0 });
+      }
+      if (noZerosArr.length === 1) {
+        mergedArray = [...noZerosArr];
+      }
+      if (noZerosArr.length > 1) {
+        mergedArray = noZerosArr.reduce(
+          (newArr: TileType[], curr: TileType, index, array) => {
+            if (
+              noZerosArr[index + 1] &&
+              curr.value === noZerosArr[index + 1].value
+            ) {
+              array.splice(index + 1, 1);
+              score += curr.value * 2;
+              const doubleCurr: TileType = { value: curr.value * 2 };
+              newArr.push(doubleCurr);
+            } else {
+              newArr.push(curr);
+            }
+
+            return newArr;
+          },
+          []
+        );
+      }
+
+      while (mergedArray.length < 4) {
+        mergedArray.push({
+          value: 0,
+        });
+      }
+
+      checkArraysMatch(mergedArray, col);
+      mergedPreFlipped.push(mergedArray);
+      addScore += score;
+    }
+    let mergedFlipped: TileType[][] = [[], [], [], []];
+
+    for (let i = 0; i < 4; i++) {
+      mergedPreFlipped.forEach((row: TileType[]) => {
+        mergedFlipped[i].push(row[i]);
+      });
+    }
     updatedTiles = [...mergedFlipped];
   }
 
@@ -207,5 +270,5 @@ export const handleArrowClick = (
     updatedTiles = [...addNewTile(updatedTiles)];
   }
 
-  return updatedTiles;
+  return { updatedTiles, addScore };
 };
