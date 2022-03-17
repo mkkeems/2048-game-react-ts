@@ -26,7 +26,6 @@ const App = () => {
       ) {
         const updatedTiles = handleArrowClick(event.code, tiles);
         setTiles(updatedTiles);
-        console.log("new Tiles: ", tiles);
       }
     },
     [tiles]

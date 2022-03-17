@@ -71,6 +71,12 @@ export const handleArrowClick = (
       const noZerosArr = removeZeroArr(row);
       let mergedArray: TileType[] = [];
 
+      if (noZerosArr.length === 0) {
+        mergedArray.unshift({ value: 0 });
+      }
+      if (noZerosArr.length === 1) {
+        mergedArray = [...noZerosArr];
+      }
       if (noZerosArr.length > 1) {
         mergedArray = noZerosArr.reduceRight(
           (newArr: TileType[], curr: TileType, index, array) => {
@@ -91,13 +97,6 @@ export const handleArrowClick = (
         );
       }
 
-      if (noZerosArr.length === 0) {
-        mergedArray.unshift({ value: 0 });
-      }
-      if (noZerosArr.length === 1) {
-        mergedArray = [...noZerosArr];
-      }
-
       while (mergedArray.length < 4) {
         mergedArray.unshift({
           value: 0,
@@ -115,14 +114,17 @@ export const handleArrowClick = (
       const noZerosArr = removeZeroArr(row);
       let mergedArray: TileType[] = [];
 
+      if (noZerosArr.length === 0) {
+        mergedArray.push({ value: 0 });
+      }
+      if (noZerosArr.length === 1) {
+        mergedArray = [...noZerosArr];
+      }
       if (noZerosArr.length > 1) {
         mergedArray = noZerosArr.reduce(
           (newArr: TileType[], curr: TileType, index, array) => {
-            if (
-              noZerosArr[index + 1] &&
-              curr.value === noZerosArr[index + 1].value
-            ) {
-              array.splice(index);
+            if (array[index + 1] && curr.value === array[index + 1].value) {
+              array.splice(index + 1, 1);
               const doubleCurr: TileType = { value: curr.value * 2 };
               newArr.push(doubleCurr);
             } else {
@@ -134,13 +136,6 @@ export const handleArrowClick = (
         );
       }
 
-      if (noZerosArr.length === 0) {
-        mergedArray.push({ value: 0 });
-      }
-      if (noZerosArr.length === 1) {
-        mergedArray = [...noZerosArr];
-      }
-
       while (mergedArray.length < 4) {
         mergedArray.push({
           value: 0,
@@ -148,7 +143,6 @@ export const handleArrowClick = (
       }
 
       checkArraysMatch(mergedArray, row);
-
       return mergedArray;
     });
   }
