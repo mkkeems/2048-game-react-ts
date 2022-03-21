@@ -18,6 +18,7 @@ const App = () => {
   const [hasLost, setHasLost] = useState(false);
   const [score, setScore] = useState(0);
   const [tiles, setTiles] = useState<TileType[][]>([]);
+  const [keyClicked, setKeyClicked] = useState<string>();
 
   useEffect(() => {
     setNewGame(true);
@@ -34,19 +35,18 @@ const App = () => {
           event.code === "ArrowUp" ||
           event.code === "ArrowDown")
       ) {
+        setKeyClicked(event.code);
         const { updatedTiles, addScore, gameOver, winGame, loseGame } =
           handleArrowClick(event.code, tiles);
         setScore(score + addScore);
         setTiles(updatedTiles);
 
         if (gameOver && winGame) {
-          console.log("gameOVER?", gameOver);
           setHasWon(true);
           setNewGame(false);
         }
 
         if (gameOver && loseGame) {
-          console.log("gameOVER?", gameOver);
           setHasLost(true);
           setNewGame(false);
         }
@@ -90,6 +90,7 @@ const App = () => {
             hasWon={hasWon}
             hasLost={hasLost}
             newGame={newGame}
+            keyClicked={keyClicked}
           />
         </Container>
       </div>

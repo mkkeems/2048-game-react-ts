@@ -46,7 +46,6 @@ const checkLoss = (array: TileType[][]): boolean => {
     row.forEach((item, index) => {
       if (row[index + 1] && item.value === row[index + 1].value) {
         falseCheckArr.push(false);
-        console.log(item.value);
       } else {
         falseCheckArr.push(true);
       }
@@ -60,13 +59,12 @@ const checkLoss = (array: TileType[][]): boolean => {
     col.forEach((item, index) => {
       if (col[index + 1] && item.value === col[index + 1].value) {
         falseCheckArr.push(false);
-        console.log(item.value);
       } else {
         falseCheckArr.push(true);
       }
     });
   }
-  return falseCheckArr.some((val) => val);
+  return falseCheckArr.every((val) => val);
 };
 
 export const handleArrowClick = (
