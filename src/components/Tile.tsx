@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePrevious } from "../hooks";
 import { theme } from "../styles/theme";
@@ -42,23 +42,26 @@ const Wrap = styled.div<TileProps>`
         return theme.tile.twoOhFourEight;
     }
   }};
+  transform: ${(props) => {
+    return props.value === 0 ? "scale(1)" : `scale(${props.scale})`;
+  }};
 
-  .innerTile {
+  /* .innerTile {
     color: ${(props) => (props.value > 4 ? theme.font.light : theme.font.dark)};
     animation: ${(props) => {
-      switch (props.keyClicked) {
-        case "ArrowUp":
-          return `slide-up 500ms;`;
-        case "ArrowDown":
-          return `slide-down 500ms;`;
-        case "ArrowRight":
-          return `slide-right 500ms;`;
-        case "ArrowLeft":
-          return ` slide-left 500ms;`;
-        default:
-          return `none`;
-      }
-    }};
+    switch (props.keyClicked) {
+      case "ArrowUp":
+        return `slide-up 500ms;`;
+      case "ArrowDown":
+        return `slide-down 500ms;`;
+      case "ArrowRight":
+        return `slide-right 500ms;`;
+      case "ArrowLeft":
+        return ` slide-left 500ms;`;
+      default:
+        return `none`;
+    }
+  }};
   }
 
   @keyframes slide-right {
@@ -100,7 +103,7 @@ const Wrap = styled.div<TileProps>`
       transform: translateY(0%);
       opacity: 1;
     }
-  }
+  } */
 
   /* transform: ${(props) => {
     switch (props.keyClicked) {
@@ -134,18 +137,35 @@ const Wrap = styled.div<TileProps>`
 interface TileProps {
   value: number;
   keyClicked?: string;
+  position?: number[];
+  scale?: number;
 }
 
-const Tile = ({ value = 0, keyClicked }: TileProps) => {
+const Tile = ({ value = 0, keyClicked, position }: TileProps) => {
+  const [scale, setScale] = useState(1);
+
   const previousValue = usePrevious<number>(value);
 
-  const isNew = previousValue === undefined;
-  const hasChanged = previousValue !== value;
-  const shallHighlight = isNew || hasChanged;
+  const newTile = previousValue === undefined;
+  const changedTile = previousValue !== value;
+  const highlightTile = newTile || changedTile;
+
+  // useEffect will decide if highlight should be triggered.
+  useEffect(() => {
+    if (highlightTile) {
+      setScale(1.1);
+      setTimeout(() => setScale(1), 100);
+    }
+  }, [highlightTile, scale]);
 
   return (
-    <Wrap value={value} keyClicked={keyClicked}>
-      <div className="innerTile">{value === 0 ? "" : value}</div>
+    <Wrap
+      value={value}
+      keyClicked={keyClicked}
+      scale={scale}
+      position={position}
+    >
+      {value === 0 ? "" : value}
     </Wrap>
   );
 };

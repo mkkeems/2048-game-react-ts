@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Tile from "./Tile";
 import { TileType } from "../types/type";
 
@@ -15,34 +14,6 @@ const Board = styled.div`
   grid-row-gap: 15px;
   grid-column-gap: 15px;
   position: relative;
-
-  /* .tiles-group {
-    height: 100%;
-    width: 100%;
-    display: grid;
-    grid-template-rows: repeat(4, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    grid-row-gap: 15px;
-    grid-column-gap: 15px;
-
-    .tiles-enter {
-      opacity: 0;
-      transform: scale(0.7);
-    }
-    .tiles-enter-active {
-      opacity: 1;
-      transform: translateX(0);
-      transition: opacity 300ms, transform 300ms;
-    }
-    .tiles-exit {
-      opacity: 1;
-    }
-    .tiles-exit-active {
-      opacity: 0;
-      transform: scale(0.9);
-      transition: opacity 300ms, transform 300ms;
-    }
-  } */
 `;
 
 const GameOverWrap = styled.div`
@@ -81,23 +52,16 @@ const GameBoard = ({
   return (
     <>
       <Board>
-        {/* <TransitionGroup className="tiles-group"> */}
         {tiles.map((row, rowIndex) =>
           row.map((tile, colIndex) => (
-            // <CSSTransition
-            //   key={`row-${rowIndex}-col-${colIndex}`}
-            //   classNames="tiles"
-            //   timeout={500}
-            // >
             <Tile
               value={tile.value}
               key={`row-${rowIndex}-col-${colIndex}`}
               keyClicked={keyClicked}
+              position={[rowIndex, colIndex]}
             />
-            // </CSSTransition>
           ))
         )}
-        {/* </TransitionGroup> */}
         {hasWon && !hasLost && !newGame && (
           <GameOverWrap>
             You Win <br />
