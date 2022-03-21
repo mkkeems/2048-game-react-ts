@@ -1,17 +1,30 @@
 import { TileType } from "../types/type";
 
+let seqId = 1;
+
+const useIds = () => {
+  const nextId = () => {
+    return seqId++;
+  };
+
+  return [nextId];
+};
+
 export const addNewTile = (tiles: TileType[][]) => {
   const getRandomRow = () => Math.floor(Math.random() * 4);
   const getRandomCol = () => Math.floor(Math.random() * 4);
   let updatedTiles: TileType[][] = [...tiles];
 
   let addedNewTile = false;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [nextId] = useIds();
 
   while (!addedNewTile) {
     let row = getRandomRow();
     let col = getRandomCol();
     if (updatedTiles[row][col].value === 0) {
       updatedTiles[row][col].value = 2;
+      updatedTiles[row][col].id = nextId();
       addedNewTile = true;
     }
   }
@@ -26,6 +39,7 @@ export const generateNewTiles = () => {
     for (let col = 0; col < 4; col++) {
       tiles[row].push({
         value: 0,
+        position: [row, col],
       });
     }
   }
@@ -123,7 +137,7 @@ export const handleArrowClick = (
             ) {
               array.splice(index - 1);
               addScore += curr.value * 2;
-              const doubleCurr: TileType = { value: curr.value * 2 };
+              const doubleCurr: TileType = { ...curr, value: curr.value * 2 };
               newArr.unshift(doubleCurr);
             } else {
               newArr.unshift(curr);
@@ -164,7 +178,7 @@ export const handleArrowClick = (
             if (array[index + 1] && curr.value === array[index + 1].value) {
               array.splice(index + 1, 1);
               addScore += curr.value * 2;
-              const doubleCurr: TileType = { value: curr.value * 2 };
+              const doubleCurr: TileType = { ...curr, value: curr.value * 2 };
               newArr.push(doubleCurr);
             } else {
               newArr.push(curr);
@@ -212,7 +226,7 @@ export const handleArrowClick = (
             ) {
               array.splice(index - 1);
               score = curr.value * 2;
-              const doubleCurr: TileType = { value: curr.value * 2 };
+              const doubleCurr: TileType = { ...curr, value: curr.value * 2 };
               newArr.unshift(doubleCurr);
             } else {
               newArr.unshift(curr);
@@ -271,7 +285,7 @@ export const handleArrowClick = (
             ) {
               array.splice(index + 1, 1);
               score += curr.value * 2;
-              const doubleCurr: TileType = { value: curr.value * 2 };
+              const doubleCurr: TileType = { ...curr, value: curr.value * 2 };
               newArr.push(doubleCurr);
             } else {
               newArr.push(curr);
@@ -303,6 +317,15 @@ export const handleArrowClick = (
     updatedTiles = [...mergedFlipped];
   }
 
+  for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+    const row = updatedTiles[rowIndex];
+    for (let colIndex = 0; colIndex < 4; colIndex++) {
+      row[colIndex].position = [];
+      row[colIndex].position?.push(rowIndex);
+      row[colIndex].position?.push(colIndex);
+    }
+  }
+
   let winGame = false;
   let loseGame = false;
   let gameOver = false;
@@ -323,6 +346,5 @@ export const handleArrowClick = (
     gameOver = true;
     winGame = true;
   }
-
   return { updatedTiles, addScore, gameOver, winGame, loseGame };
 };

@@ -58,7 +58,8 @@ const GameBoard = ({
               value={tile.value}
               key={`row-${rowIndex}-col-${colIndex}`}
               keyClicked={keyClicked}
-              position={[rowIndex, colIndex]}
+              // position={[rowIndex, colIndex]}
+              tileObj={tile}
             />
           ))
         )}

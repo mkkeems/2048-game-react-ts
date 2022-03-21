@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { usePrevious } from "../hooks";
 import { theme } from "../styles/theme";
+import { TileType } from "../types/type";
 // import { TileType } from "../types/type";
 
 const Wrap = styled.div<TileProps>`
@@ -139,15 +140,19 @@ interface TileProps {
   keyClicked?: string;
   position?: number[];
   scale?: number;
+  tileObj: TileType;
 }
 
-const Tile = ({ value = 0, keyClicked, position }: TileProps) => {
+const Tile = ({ value = 0, keyClicked, tileObj }: TileProps) => {
   const [scale, setScale] = useState(1);
 
-  const previousValue = usePrevious<number>(value);
+  const previousTile = usePrevious(tileObj);
+  if (previousTile && previousTile.value !== tileObj.value) {
+    console.log("prev vs new", previousTile, tileObj);
+  }
 
-  const newTile = previousValue === undefined;
-  const changedTile = previousValue !== value;
+  const newTile = previousTile && previousTile.value === undefined;
+  const changedTile = previousTile && previousTile.value !== value;
   const highlightTile = newTile || changedTile;
 
   // useEffect will decide if highlight should be triggered.
@@ -163,7 +168,8 @@ const Tile = ({ value = 0, keyClicked, position }: TileProps) => {
       value={value}
       keyClicked={keyClicked}
       scale={scale}
-      position={position}
+      position={tileObj.position}
+      tileObj={tileObj}
     >
       {value === 0 ? "" : value}
     </Wrap>

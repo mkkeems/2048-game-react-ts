@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Container,
   GameBoard,
@@ -38,6 +38,8 @@ const App = () => {
         setKeyClicked(event.code);
         const { updatedTiles, addScore, gameOver, winGame, loseGame } =
           handleArrowClick(event.code, tiles);
+
+        console.log(tiles, updatedTiles);
         setScore(score + addScore);
         setTiles(updatedTiles);
 
